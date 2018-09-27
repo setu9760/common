@@ -1,6 +1,10 @@
 package com.mycompany.app;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.withSettings;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,11 +28,15 @@ public class AppContextTest {
 	ModelARepository repoA;
 	@Autowired
 	ModelBRepository repoB;
+	@Autowired
+	JdbcTemplate jdbcTemplate; 
 	
 	@Test
 	public void testContextLoads() {
 		assertNotNull(repoA);
 		assertNotNull(repoB);
+		verify(jdbcTemplate).afterPropertiesSet();
+		verifyNoMoreInteractions(jdbcTemplate);
 	}
 	
 	@Configuration
@@ -37,7 +45,7 @@ public class AppContextTest {
 		
 		@Bean
 		JdbcTemplate jdbcTemplate() {
-			return Mockito.mock(JdbcTemplate.class);
+			return Mockito.mock(JdbcTemplate.class, withSettings().verboseLogging());
 		}
 		
 	}
