@@ -1,5 +1,6 @@
 package com.mycompany.app;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
@@ -55,9 +56,11 @@ public class ModelARepositoryTest {
 	
 	@Test
 	public void testGet() throws Exception {
-		when(jdbcTemplate.queryForObject(anyString(), eq(new Object[] {"test"}) , any(ModelARowMapper.class))).thenReturn(new ModelA("test", 1));
+		ModelA mock = new ModelA("test", 1);
+		when(jdbcTemplate.queryForObject(anyString(), eq(new Object[] {"test"}) , any(ModelARowMapper.class))).thenReturn(mock);
 		ModelA m = repo1.get("test");
 		assertNotNull(m);
+		assertEquals(mock, m);
 		verify(jdbcTemplate).queryForObject(anyString(), eq(new Object[] {"test"}) , any(ModelARowMapper.class));
 	}
 	
